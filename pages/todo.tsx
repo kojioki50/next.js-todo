@@ -1,32 +1,30 @@
 /* eslint-disable no-nested-ternary */
-import {
-  ChangeEventHandler,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { toast, ToastContainer, Zoom } from "react-toastify";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import styles from "../styles/Todo.module.css";
 import { useRecoilState } from "recoil";
 import { Button } from "../button/button";
-import { useTodo } from "../hooks/hook1";
+// import { useTodo } from "../hooks/hook1";
 import { UserInfoContext } from "../provider/userInfoProvider";
 import { UserState } from "../recoile/userState";
 import { useRouter } from "next/router";
+import { TodoType } from "../types/type1";
+import { GetStaticProps, NextPage } from "next";
 
-export default function Todo() {
+const Todo: NextPage<any> = ({ users }) => {
   const [definiteTodos, setDefiniteTodos] = useRecoilState(UserState);
   const [indefiniteTodos, setindefiniteTodos] = useState<string[]>([]);
-  const {userInfo, setUserInfo } = useContext(UserInfoContext);
-    const router = useRouter();
-  const [textInput, setTextInput] = useState<string>('');
+  const { userInfo, setUserInfo } = useContext(UserInfoContext);
+  const router = useRouter();
+  const [textInput, setTextInput] = useState<string>("");
 
-  const { users, isLoading, fetch } = useTodo();
-  
+  // const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  // const { users, isLoading, fetch } = useTodo();
+
+  // useEffect(() => {
+  //   fetch();
+  // }, [fetch]);
 
   const textChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTextInput(e.target.value);
@@ -34,7 +32,7 @@ export default function Todo() {
 
   const addData = () => {
     setUserInfo(users);
-  }
+  };
 
   const addArea = () => {
     const newTextInput = [...indefiniteTodos, textInput];
@@ -42,7 +40,7 @@ export default function Todo() {
     setTextInput("");
     toast("新しい議案が提出されました", {
       style: {
-        background: "skyblue"
+        background: "skyblue",
       },
     });
   };
@@ -87,7 +85,7 @@ export default function Todo() {
     setindefiniteTodos(deleteLine);
   };
 
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = users.filter((user: TodoType) => {
     return user.completed === false;
   });
   console.log(filteredUsers);
@@ -125,11 +123,11 @@ export default function Todo() {
       <div className={styles.indefinitearea}>
         <div className={styles.box}>未決定箱</div>
         <div>
-          {isLoading ? (
-            <p className={styles.loading}>データ取得中</p>
-          ) : users && users.length && filteredUsers.length ? (
+          {/* {isLoading ? (
+            <p className={styles.loading}>データ取得中</p> */}
+          {users && users.length && filteredUsers.length ? (
             <ul>
-              {filteredUsers.map((user, index) => {
+              {filteredUsers.map((user: TodoType, index: number) => {
                 return (
                   <div key={index} className={styles.containerlist}>
                     <li className={styles.apidata}>{user.title}</li>
@@ -162,9 +160,8 @@ export default function Todo() {
       <div className={styles.definitearea}>
         <div className={styles.box}>決定箱</div>
         <div>
-          {isLoading ? (
-            <p className={styles.loading}>データ取得中</p>
-          ) : users ? (
+          <p className={styles.loading}>データ取得待機中</p>
+          {users ? (
             <ul>
               {userInfo
                 .filter((user) => {
@@ -206,3 +203,15 @@ export default function Todo() {
     </>
   );
 };
+
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+  const users = await res.json();
+  console.log(users);
+  return {
+    props: { users },
+    revalidate: 10,
+  };
+};
+
+export default Todo;

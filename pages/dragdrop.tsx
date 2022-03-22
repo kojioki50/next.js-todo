@@ -1,4 +1,3 @@
-import { renderStylesToString } from "@emotion/server";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -6,7 +5,7 @@ import {
   DragDropContext,
   Droppable,
   Draggable,
-  resetServerContext
+  
 } from "react-beautiful-dnd";
 import styled from "styled-components";
 
@@ -14,7 +13,7 @@ import { Button } from "../button/button";
 import { CHARACTERS } from "../public/CHARACTERS";
 
 export default function DragDrop() {
-  resetServerContext();
+  // resetServerContext();
   const router = useRouter();
   const [characters, updateCharacters] = useState(CHARACTERS);
   const handleOnDragEnd = (result: any) => {
