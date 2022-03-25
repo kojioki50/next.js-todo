@@ -13,31 +13,34 @@ import { toast } from "react-toastify";
 import styles from "../styles/Todo.module.css";
 import { useRecoilState } from "recoil";
 import { Button } from "../button/button";
-import { UserInfoContext } from "../provider/userInfoProvider";
+// import { UserInfoContext } from "../provider/userInfoProvider";
 import { UserState } from "../recoile/userState";
 import { useRouter } from "next/router";
-import { TodoType } from "../types/type1";
+import { TodoListType } from "../types/type1";
 import { GetStaticProps, NextPage } from "next";
 
-const Todo: NextPage<TodoType> = (props) => {
-  const { users } = props;
+const Todo: NextPage<TodoListType> = (props) => {
+  const { todos } = props;
   const [definiteTodos, setDefiniteTodos] = useRecoilState(UserState);
   const [indefiniteTodos, setindefiniteTodos] = useState<string[]>([]);
-  const { userInfo, setUserInfo } = useContext(UserInfoContext);
+  // const { userInfo, setUserInfo } = useContext(UserInfoContext);
   const router = useRouter();
   const [textInput, setTextInput] = useState<string>("");
-  console.log(users);
+  const [todoList,setTodoList] = useState([{}])
+  console.log(todos);
   console.log(props);
-
+  
   // const [isLoading, setLoading] = useState(false);
-
+  
   const textChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTextInput(e.target.value);
   };
-
+  
   const addData = () => {
-    setUserInfo(users);
+    setTodoList(todos);
+     console.log(todoList);
   };
+ 
 
   const addArea = () => {
     const newTextInput = [...indefiniteTodos, textInput];
@@ -90,8 +93,8 @@ const Todo: NextPage<TodoType> = (props) => {
     setindefiniteTodos(deleteLine);
   };
 
-  const filteredUsers = users.filter((user) => {
-    return user.completed === false;
+  const filteredUsers = todos.filter((todo) => {
+    return todo.completed === false;
   });
   console.log(filteredUsers);
 
@@ -130,12 +133,12 @@ const Todo: NextPage<TodoType> = (props) => {
         <div>
           {/* {isLoading ? (
             <p className={styles.loading}>データ取得中</p> */}
-          {users && users.length && filteredUsers.length ? (
+          {todos && todos.length && filteredUsers.length ? (
             <ul>
-              {filteredUsers.map((user, index) => {
+              {filteredUsers.map((todo, index) => {
                 return (
                   <div key={index} className={styles.containerlist}>
-                    <li className={styles.apidata}>{user.title}</li>
+                    <li className={styles.apidata}>{todo.title}</li>
                   </div>
                 );
               })}
@@ -166,14 +169,14 @@ const Todo: NextPage<TodoType> = (props) => {
           <p className={styles.loading}>データ取得待機中</p>
           {props ? (
             <ul>
-              {userInfo
-                .filter((user) => {
-                  return user.completed === true;
+              {todos
+                .filter((todo) => {
+                  return todo.completed === true;
                 })
-                .map((user, index) => {
+                .map((todo, index) => {
                   return (
                     <div key={index} className={styles.containerlist}>
-                      <li className={styles.apidata}>{user.title}</li>
+                      <li className={styles.apidata}>{todo.title}</li>
                     </div>
                   );
                 })}
@@ -208,10 +211,10 @@ const Todo: NextPage<TodoType> = (props) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch("https://jsonplaceholder.typicode.com/todos");
-  const users: TodoType = await res.json();
-  console.log(users);
+  const todos: TodoListType = await res.json();
+  console.log(todos);
   return {
-    props: { users },
+    props: { todos },
     revalidate: 10,
   };
 };
