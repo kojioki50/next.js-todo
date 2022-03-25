@@ -1,3 +1,5 @@
+import { PropsWithChildren } from "react";
+
 export type TodoType = {
   userId: number;
   id: number;
@@ -5,4 +7,7 @@ export type TodoType = {
   completed: boolean;
   value?: string;
   index?: number;
+  users: 
+    TodoType[]
+  ;
 };

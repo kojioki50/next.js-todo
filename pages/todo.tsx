@@ -1,30 +1,35 @@
 /* eslint-disable no-nested-ternary */
-import { ChangeEventHandler, useContext, useEffect, useState } from "react";
+import {
+  ChangeEventHandler,
+  Key,
+  ReactChild,
+  ReactFragment,
+  ReactPortal,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
 import styles from "../styles/Todo.module.css";
 import { useRecoilState } from "recoil";
 import { Button } from "../button/button";
-// import { useTodo } from "../hooks/hook1";
 import { UserInfoContext } from "../provider/userInfoProvider";
 import { UserState } from "../recoile/userState";
 import { useRouter } from "next/router";
 import { TodoType } from "../types/type1";
 import { GetStaticProps, NextPage } from "next";
 
-const Todo: NextPage<any> = ({ users }) => {
+const Todo: NextPage<TodoType> = (props) => {
+  const { users } = props;
   const [definiteTodos, setDefiniteTodos] = useRecoilState(UserState);
   const [indefiniteTodos, setindefiniteTodos] = useState<string[]>([]);
   const { userInfo, setUserInfo } = useContext(UserInfoContext);
   const router = useRouter();
   const [textInput, setTextInput] = useState<string>("");
+  console.log(users);
+  console.log(props);
 
   // const [isLoading, setLoading] = useState(false);
-
-  // const { users, isLoading, fetch } = useTodo();
-
-  // useEffect(() => {
-  //   fetch();
-  // }, [fetch]);
 
   const textChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTextInput(e.target.value);
@@ -85,7 +90,7 @@ const Todo: NextPage<any> = ({ users }) => {
     setindefiniteTodos(deleteLine);
   };
 
-  const filteredUsers = users.filter((user: TodoType) => {
+  const filteredUsers = users.filter((user) => {
     return user.completed === false;
   });
   console.log(filteredUsers);
@@ -127,7 +132,7 @@ const Todo: NextPage<any> = ({ users }) => {
             <p className={styles.loading}>データ取得中</p> */}
           {users && users.length && filteredUsers.length ? (
             <ul>
-              {filteredUsers.map((user: TodoType, index: number) => {
+              {filteredUsers.map((user, index) => {
                 return (
                   <div key={index} className={styles.containerlist}>
                     <li className={styles.apidata}>{user.title}</li>
@@ -147,11 +152,9 @@ const Todo: NextPage<any> = ({ users }) => {
                 <Button margin="10px 5px" onClick={() => completeArea(index)}>
                   決定
                 </Button>
-                {/* <ToastContainer autoClose={1000} /> */}
                 <Button margin="10px 5px" onClick={() => deleteArea(index)}>
                   却下
                 </Button>
-                {/* <ToastContainer autoClose={1000} /> */}
               </div>
             );
           })}
@@ -161,7 +164,7 @@ const Todo: NextPage<any> = ({ users }) => {
         <div className={styles.box}>決定箱</div>
         <div>
           <p className={styles.loading}>データ取得待機中</p>
-          {users ? (
+          {props ? (
             <ul>
               {userInfo
                 .filter((user) => {
@@ -187,7 +190,6 @@ const Todo: NextPage<any> = ({ users }) => {
                 <Button margin="10px 5px" onClick={() => backArea(index)}>
                   保留
                 </Button>
-                {/* <ToastContainer autoClose={1000} /> */}
               </div>
             );
           })}
@@ -206,7 +208,7 @@ const Todo: NextPage<any> = ({ users }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch("https://jsonplaceholder.typicode.com/todos");
-  const users = await res.json();
+  const users: TodoType = await res.json();
   console.log(users);
   return {
     props: { users },

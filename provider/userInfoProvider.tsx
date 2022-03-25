@@ -1,17 +1,17 @@
 import React, { createContext, ReactNode, useState } from "react";
-import { Todo } from "../types/type1";
+import { TodoType } from "../types/type1";
 
 export const UserInfoContext = createContext(
   {} as {
-    userInfo: Todo[];
-    setUserInfo: React.Dispatch<React.SetStateAction<Todo[]>>;
+    userInfo: TodoType[];
+    setUserInfo: React.Dispatch<React.SetStateAction<TodoType[]>>;
   }
 );
 
 export const UserInfoProvider = (props: { children: ReactNode }) => {
   const { children } = props;
 
-  const [userInfo, setUserInfo] = useState<Todo[]>([]);
+  const [userInfo, setUserInfo] = useState<TodoType[]>([]);
 
   return (
     <UserInfoContext.Provider value={{ userInfo, setUserInfo }}>
