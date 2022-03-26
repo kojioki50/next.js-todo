@@ -16,10 +16,10 @@ import { Button } from "../button/button";
 // import { UserInfoContext } from "../provider/userInfoProvider";
 import { UserState } from "../recoile/userState";
 import { useRouter } from "next/router";
-import { TodoListType } from "../types/type1";
+import { TodoArrayType } from "../types/type1";
 import { GetStaticProps, NextPage } from "next";
 
-const Todo: NextPage<TodoListType> = (props) => {
+const Todo: NextPage<TodoArrayType> = (props) => {
   const { todos } = props;
   const [definiteTodos, setDefiniteTodos] = useRecoilState(UserState);
   const [indefiniteTodos, setindefiniteTodos] = useState<string[]>([]);
@@ -211,7 +211,7 @@ const Todo: NextPage<TodoListType> = (props) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch("https://jsonplaceholder.typicode.com/todos");
-  const todos: TodoListType = await res.json();
+  const todos: TodoArrayType = await res.json();
   console.log(todos);
   return {
     props: { todos },

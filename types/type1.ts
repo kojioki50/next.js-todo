@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 
-export type TodoListType = {
+export type TodoArrayType = {
   // userId: number;
   // id: number;
   // title: string;
