@@ -4,7 +4,7 @@ import { Button } from "../../button/button";
 
 export default function Parameter() {
   const router = useRouter();
-  const { id,name } = router.query;
+  const { id, name } = router.query;
   return (
     <SDiv>
       <SH1>パラメーターページです</SH1>
@@ -20,7 +20,7 @@ export default function Parameter() {
       <Button onClick={() => router.back()}>戻る</Button>
     </SDiv>
   );
-};
+}
 const SDiv = styled.div`
   background: #52bedf;
 `;
